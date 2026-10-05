@@ -23,7 +23,7 @@ def plain(h):
 
 
 def body_text(post):
-    """The text the page counts: every block but images, contact lines included (page.js countChars)."""
+    """The text the page counts: everything pasted as text (closing contact lines too), no images (page.js countChars)."""
     out = []
     for b in post["blocks"]:
         t = b["t"]
@@ -44,12 +44,13 @@ def check(post):
     errs = []
     blocks = post["blocks"]
     text = body_text(post)
-    n = len(text)
+    # Counted without spaces, like the counter choi checks posts with (2026-10-05).
+    n = len(re.sub(r"\s", "", text))
     quotes = sum(b["t"] == "quote" for b in blocks)
     raw = json.dumps(blocks, ensure_ascii=False)
 
     if not MIN_CHARS <= n <= MAX_CHARS:
-        errs.append(f"글자수 {n}자: {MIN_CHARS}~{MAX_CHARS}자여야 합니다")
+        errs.append(f"글자수(공백 제외) {n}자: {MIN_CHARS}~{MAX_CHARS}자여야 합니다")
     if quotes < MIN_QUOTES:
         errs.append(f"인용구 {quotes}개: {MIN_QUOTES}개 이상이어야 합니다")
     if "<r>" not in raw or "<n>" not in raw:
@@ -83,7 +84,7 @@ def main():
     failed = False
     for p in posts:
         errs, n, quotes = check(p)
-        print(f"{p['date']} {p['keyword']}: {n}자, 인용구 {quotes}개" + ("" if errs else " OK"))
+        print(f"{p['date']} {p['keyword']}: 공백 제외 {n}자, 인용구 {quotes}개" + ("" if errs else " OK"))
         for e in errs:
             print("  - " + e)
         failed |= bool(errs)
