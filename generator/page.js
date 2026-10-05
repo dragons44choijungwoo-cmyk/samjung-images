@@ -4,6 +4,8 @@ const RAW = "https://raw.githubusercontent.com/dragons44choijungwoo-cmyk/samjung
 // KakaoTalk open chat and phone given by choi; every image links to the chat.
 const KAKAO = "https://open.kakao.com/o/sWb5ALAi";
 const PHONE = "010-8076-5711";
+// 삼정's Naver Place listing (choi asked for it in every post). A map search link until the exact place link is known.
+const PLACE = { name: "부산광고 삼정", url: "https://map.naver.com/p/search/부산광고 삼정" };
 // Point colors for pasted text (inline, since the editor keeps no stylesheet).
 const PASTE_COLOR = { r: "#d92b2b", n: "#1b3a8a" };
 
@@ -24,6 +26,7 @@ function blockHTML(post, b, forCopy) {
     case "ul": return `<ul>${b.items.map(i => `<li>${paint(i, forCopy)}</li>`).join("")}</ul>`;
     case "kakao": return `<p>💬 카톡 상담: <a href="${KAKAO}">${KAKAO}</a></p>`;
     case "phone": return `<p>📞 전화 상담: <b>${PHONE}</b></p>`;
+    case "place": return `<p>📍 네이버 플레이스: <a href="${encodeURI(PLACE.url)}">${PLACE.name}</a></p>`;
     case "link": return `<p>👉 상담 바로가기: <a href="${encodeURI(post.link)}">${post.link}</a></p>`;
     case "img": {
       const file = post.imgDir + post.images[b.id].file;
