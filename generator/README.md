@@ -12,7 +12,7 @@
   홈페이지 관련 글이면 AI 제작, AI를 원하지 않는 대표님께는 전문 디자이너의 커스텀 디자인, 예약·회원·결제 같은 플랫폼 기능 개발도 가능하다고 안내
 - 사진 5장: 대표 이미지(로고+모델), 본문 그림 3장, 마지막 "카카오톡으로 무료 상담받기" 이미지.
   모든 사진에 카톡 링크가 찍혀 있고, 누르면 카톡 상담으로 연결
-- 끝부분: 문의 이미지, 카톡 링크(https://open.kakao.com/o/sWb5ALAi), 전화(010-8076-5711), `https://samjung.ai.kr/?ref=<키워드>`
+- 끝부분: 문의 이미지, 카톡 링크(https://open.kakao.com/o/sWb5ALAi), 전화(010-8076-5711), 네이버 플레이스 "부산광고 삼정", `https://samjung.ai.kr/?ref=<키워드>`
 
 ## ○개 만드는 순서
 
@@ -22,7 +22,7 @@
 2. 준최 확인: 후보마다 블로그 연구소(https://lablog.co.kr)에서 준최 키워드인지 확인하고, 준최인 키워드만 ○개 씁니다.
    블로그 연구소에 접속할 수 없으면 후보 목록을 choi에게 보여 주고 확인을 받은 뒤 씁니다.
 3. 글 쓰기: 글 하나당 `posts/<날짜>-<영문-슬러그>.json` 파일 하나. 기존 파일을 본보기로 씁니다.
-   - `blocks`: `p`, `quote`, `h2`, `ul`, `img`, `kakao`, `phone`, `link`
+   - `blocks`: `p`, `quote`, `h2`, `ul`, `img`, `kakao`, `phone`, `place`, `link`
    - `images`: 사진 설정. `cover`(대표), `rows`(표), `steps`(단계), `check`(체크리스트), `cta`(문의).
      모델 사진은 `front`, `thinking`, `pointing` 중에서 고릅니다. 파일 이름은 `-v1.png`로 끝납니다.
 4. 사진 그리기: `NODE_PATH=$(npm root -g) node render.js` (없는 사진만 그려서 저장소의 `posts/` 아래에 저장)

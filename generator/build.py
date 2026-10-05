@@ -14,6 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 KAKAO = "https://open.kakao.com/o/sWb5ALAi"
 PHONE = "010-8076-5711"
+PLACE_NAME = "부산광고 삼정"
 MIN_CHARS, MAX_CHARS = 1900, 2000
 MIN_QUOTES = 7
 
@@ -35,6 +36,8 @@ def body_text(post):
             out.append("💬 카톡 상담: " + KAKAO)
         elif t == "phone":
             out.append("📞 전화 상담: " + PHONE)
+        elif t == "place":
+            out.append("📍 네이버 플레이스: " + PLACE_NAME)
         elif t == "link":
             out.append("👉 상담 바로가기: " + post["link"])
     return "".join(out)
@@ -64,8 +67,8 @@ def check(post):
     for must in ("5만 원", "70%"):
         if must not in text:
             errs.append(f"삼정 영업 문구 '{must}'가 없습니다")
-    if [b["t"] for b in blocks[-4:]] != ["img", "kakao", "phone", "link"] or blocks[-4].get("id") != "cta":
-        errs.append("마지막은 cta 이미지, kakao, phone, link 순서여야 합니다")
+    if [b["t"] for b in blocks[-5:]] != ["img", "kakao", "phone", "place", "link"] or blocks[-5].get("id") != "cta":
+        errs.append("마지막은 cta 이미지, kakao, phone, place, link 순서여야 합니다")
     if blocks[0]["t"] != "img":
         errs.append("첫 블록은 대표 이미지여야 합니다")
     for b in blocks:
