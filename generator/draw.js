@@ -94,7 +94,10 @@ const DRAW = {
     if (ph) { cover(ctx, ph, 500, 0, S - 500, S - 122, d.fx, d.fy, d.zoom); fadeLeft(ctx, 500, 760, 0, S - 122); fadeBottom(ctx, S - 300, S - 122); }
     logo(ctx, 80, 80, 58);
     ctx.fillStyle = C.y; ctx.font = f(700, 38); shadowText(ctx, d.label, 80, 260);
-    ctx.fillStyle = C.w; ctx.font = f(900, 92); shadowText(ctx, d.big, 80, 380);
+    // Long keywords shrink so they stay left of the model photo.
+    let bs = 92; ctx.font = f(900, bs);
+    while (bs > 60 && ctx.measureText(d.big).width > 540) { bs -= 2; ctx.font = f(900, bs); }
+    ctx.fillStyle = C.w; shadowText(ctx, d.big, 80, 380);
     ctx.font = f(900, 62);
     ctx.fillStyle = C.y; shadowText(ctx, d.hl, 80, 480);
     ctx.fillStyle = C.w; shadowText(ctx, d.rest, 80, 560);
