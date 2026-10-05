@@ -42,15 +42,15 @@ function copyText(post) {
 }
 function countChars(post) {
   const tmp = document.createElement("div");
-  // Only the written body counts: no images (or the text on them) and no closing contact lines.
-  tmp.innerHTML = post.blocks.filter(b => ["p", "quote", "h2", "ul"].includes(b.t)).map(b => blockHTML(post, b, true)).join("");
+  // Everything pasted as text counts (closing contact lines too); images and the text on them don't.
+  tmp.innerHTML = post.blocks.filter(b => b.t !== "img").map(b => blockHTML(post, b, true)).join("");
   // Count as people do (an emoji is one character), the same way build.py checks the length rule.
   const t = tmp.textContent;
   return { withSp: Array.from(t.replace(/\n/g, "")).length, noSp: Array.from(t.replace(/\s/g, "")).length };
 }
 function render() {
   const p = cur, c = countChars(p);
-  document.getElementById("count").textContent = `글자수 ${c.withSp.toLocaleString()}자 (공백 제외 ${c.noSp.toLocaleString()}자)`;
+  document.getElementById("count").textContent = `글자수 공백 제외 ${c.noSp.toLocaleString()}자 (공백 포함 ${c.withSp.toLocaleString()}자)`;
   document.getElementById("mKeyword").textContent = `키워드 ${p.keyword}`;
   document.getElementById("mVolume").textContent = `월 검색량 ${p.volume}`;
   document.getElementById("mRegion").textContent = `지역 ${p.region}`;
