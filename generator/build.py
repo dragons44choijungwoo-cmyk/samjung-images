@@ -85,6 +85,12 @@ def check(post):
 def main():
     posts = [json.load(open(f, encoding="utf-8")) for f in sorted(glob.glob(os.path.join(HERE, "posts", "*.json")))]
     failed = False
+    seen = {}
+    for p in posts:
+        if p["keyword"] in seen:
+            print(f"키워드 '{p['keyword']}'가 {seen[p['keyword']]}와 겹칩니다: 글마다 새 키워드를 써야 합니다")
+            failed = True
+        seen[p["keyword"]] = p["date"]
     for p in posts:
         errs, n, quotes = check(p)
         print(f"{p['date']} {p['keyword']}: 공백 제외 {n}자, 인용구 {quotes}개" + ("" if errs else " OK"))
