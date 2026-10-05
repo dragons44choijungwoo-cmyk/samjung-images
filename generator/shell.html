@@ -1,0 +1,140 @@
+<title>삼정 카페 글 미리보기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: a sticky action bar over a single "editor paper" column, the post exactly as it will be pasted. */
+:root {
+  --bg: #eef1f6;
+  --paper: #ffffff;
+  --ink: #16233f;
+  --muted: #5d6b85;
+  --line: #d9dfe9;
+  --accent: #ffc93c;
+  --accent-ink: #16233f;
+  --chip: #e3e8f1;
+  --ok: #1f7a4d;
+  --red: #c92a2a;
+  --navy: #1b3a8a;
+  --font: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1626; --paper: #18223a; --ink: #e8ecf5; --muted: #9aa6bf; --line: #2b3754;
+    --accent: #ffc93c; --accent-ink: #16233f; --chip: #24304b; --ok: #5fd39a; --red: #ff8f8f; --navy: #a8bfff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1626; --paper: #18223a; --ink: #e8ecf5; --muted: #9aa6bf; --line: #2b3754;
+  --accent: #ffc93c; --accent-ink: #16233f; --chip: #24304b; --ok: #5fd39a; --red: #ff8f8f; --navy: #a8bfff; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.75; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 0 64px; }
+
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); padding-block: 14px; border-bottom: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.bar-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.bar h1 { margin: 0; font-size: 17px; font-weight: 700; }
+.meta { display: flex; gap: 6px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
+.meta span { background: var(--chip); border-radius: 4px; padding: 1px 8px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+button {
+  font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  border-radius: 6px; padding: 8px 14px; line-height: 1.3;
+}
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+button:hover { filter: brightness(0.97); }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.pick { display: flex; align-items: center; gap: 10px; }
+select { font: inherit; font-size: 14px; font-weight: 700; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; max-width: 100%; }
+select:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.toast { font-size: 13.5px; color: var(--ok); min-height: 1.3em; margin: 0; }
+
+.field { margin-top: 20px; display: flex; flex-direction: column; gap: 4px; }
+.label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; color: var(--muted); }
+.title-box { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; font-size: 19px; font-weight: 700; line-height: 1.5; text-wrap: balance; }
+
+.paper { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 28px clamp(16px, 5vw, 44px); }
+.paper h2 { font-size: 20px; font-weight: 900; margin: 36px 0 10px; text-wrap: balance; }
+.paper p { margin: 0 0 14px; }
+.paper ol { margin: 0 0 14px; padding-left: 1.4em; }
+.paper ul { margin: 0 0 14px; padding-left: 1.2em; }
+.paper li { margin-bottom: 6px; }
+.paper a { color: inherit; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 3px; word-break: break-all; }
+.tagline { font-size: 15px; font-weight: 500; color: var(--muted); }
+.paper blockquote { margin: 18px 0 20px; padding: 14px 18px; border-left: 4px solid var(--accent); background: var(--chip); border-radius: 0 6px 6px 0; }
+.paper blockquote p { margin: 0; font-weight: 700; }
+.table-scroll { overflow-x: auto; margin: 0 0 14px; }
+.paper table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 460px; }
+.paper th, .paper td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+.paper th { background: var(--chip); }
+
+figure { margin: 18px 0 22px; display: flex; flex-direction: column; gap: 8px; }
+figure img { width: 100%; max-width: 100%; height: auto; border-radius: 4px; display: block; background: var(--chip); aspect-ratio: 1 / 1; }
+.c-r { color: var(--red); }
+.c-n { color: var(--navy); }
+figure a { display: block; }
+figcaption { font-size: 12.5px; color: var(--muted); }
+figcaption b { color: var(--ink); }
+.meta span.count { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+
+.help { margin-top: 18px; font-size: 13.5px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+.help strong { color: var(--ink); }
+
+#copybox { position: fixed; left: -10000px; top: 0; width: 700px; background: #fff; color: #000; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <div class="bar">
+    <div class="bar-top">
+      <h1>삼정 카페 글 미리보기</h1>
+      <div class="meta">
+        <span id="mKeyword"></span>
+        <span id="mVolume"></span>
+        <span id="mRegion"></span>
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+    <label class="pick" for="postSel"><span class="label">글 선택</span><select id="postSel"></select></label>
+    <div class="actions">
+      <button class="primary" id="copyAll" type="button">본문 전체 복사 (글+인용구+사진)</button>
+      <button id="copyTitle" type="button">제목 복사</button>
+      <button id="copyTags" type="button">해시태그 복사</button>
+    </div>
+    <p class="toast" id="toast" role="status" aria-live="polite"></p>
+  </div>
+
+  <div class="field">
+    <span class="label">제목</span>
+    <div class="title-box" id="title"></div>
+  </div>
+
+  <div class="field">
+    <span class="label">본문</span>
+    <article class="paper" id="article"></article>
+  </div>
+
+  <div class="field">
+    <span class="label">해시태그</span>
+    <div class="title-box tagline" id="tags"></div>
+  </div>
+
+  <div class="help">
+    <span><strong>올리는 순서</strong> 제목 복사 후 제목 칸에 붙여넣기, 본문 전체 복사 후 본문 칸에 붙여넣기 하세요. 인용구는 인용구 상자로 들어갑니다.</span>
+    <span><strong>사진</strong> 본문 전체 복사에 사진이 같이 들어가고, 사진을 누르면 카톡 상담으로 연결됩니다. 붙여넣은 뒤 네이버가 사진을 불러오는 데 몇 초 걸릴 수 있어요. 사진이 빠지면 대화방의 이미지 파일을 같은 번호 자리에 넣으면 됩니다.</span>
+    <span><strong>글자수</strong> 본문(제목, 해시태그 제외)을 공백 포함으로 센 값입니다.</span>
+  </div>
+</div>
+
+<div id="copybox" aria-hidden="true"></div>
+
+<script>
+/*PAGE_JS*/
+</script>
