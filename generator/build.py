@@ -23,7 +23,7 @@ def plain(h):
 
 
 def body_text(post):
-    """The text the page counts: every block but images, contact lines included (page.js countChars)."""
+    """The text the page counts: the written body only, without images or the closing contact lines (page.js countChars)."""
     out = []
     for b in post["blocks"]:
         t = b["t"]
@@ -31,12 +31,6 @@ def body_text(post):
             out.append(plain(b["h"]))
         elif t == "ul":
             out.extend(plain(i) for i in b["items"])
-        elif t == "kakao":
-            out.append("💬 카톡 상담: " + KAKAO)
-        elif t == "phone":
-            out.append("📞 전화 상담: " + PHONE)
-        elif t == "link":
-            out.append("👉 상담 바로가기: " + post["link"])
     return "".join(out)
 
 

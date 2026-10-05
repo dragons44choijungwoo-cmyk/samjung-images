@@ -42,7 +42,8 @@ function copyText(post) {
 }
 function countChars(post) {
   const tmp = document.createElement("div");
-  tmp.innerHTML = post.blocks.filter(b => b.t !== "img").map(b => blockHTML(post, b, true)).join("");
+  // Only the written body counts: no images (or the text on them) and no closing contact lines.
+  tmp.innerHTML = post.blocks.filter(b => ["p", "quote", "h2", "ul"].includes(b.t)).map(b => blockHTML(post, b, true)).join("");
   // Count as people do (an emoji is one character), the same way build.py checks the length rule.
   const t = tmp.textContent;
   return { withSp: Array.from(t.replace(/\n/g, "")).length, noSp: Array.from(t.replace(/\s/g, "")).length };
