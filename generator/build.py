@@ -17,6 +17,14 @@ PHONE = "010-8076-5711"
 PLACE_NAME = "부산광고 삼정"
 MIN_CHARS, MAX_CHARS = 1900, 2000
 MIN_QUOTES = 7
+# 부산 구/동 names from the keyword sheet (rows 1-9). Posts name the city only.
+DISTRICTS = """중앙동 동광동 대청동 보수동 부평동 광복동 남포동 영주동 동대신동 서대신동 부민동 아미동 초장동 충무동 남부민동 암남동
+초량동 수정동 좌천동 범일동 남항동 영선동 신선동 봉래동 청학동 동삼동 대연동 용호동 용당동 감만동 우암동 문현동
+남천동 수영동 망미동 광안동 민락동 부전동 연지동 초읍동 양정동 전포동 부암동 당감동 가야동 개금동 범천동
+수민동 복산동 명륜동 온천동 사직동 안락동 명장동 거제동 연산동 금사동 부곡동 장전동 선두구동 청룡남산동 구서동 금성동
+좌동 송정동 반여동 반송동 재송동 구포동 금곡동 화명동 덕천동 만덕동 대저동 강동동 명지동 가락동 녹산동 가덕도동
+삼락동 모라동 덕포동 괘법동 감전동 주례동 학장동 엄궁동 괴정동 당리동 하단동 신평동 장림동 다대동 구평동 감천동
+부산진구 동래구 해운대구 사하구 금정구 연제구 수영구 사상구 영도구 강서구 기장군 해운대 광안리 서면""".split()
 
 
 def plain(h):
@@ -60,8 +68,13 @@ def check(post):
         errs.append("빨간색(<r>)과 남색(<n>) 포인트가 모두 있어야 합니다")
     if post["keyword"] not in post["title"]:
         errs.append("제목에 키워드가 없습니다")
-    if post["region"].split()[-1] not in post["title"]:
-        errs.append("제목에 지역(동)이 없습니다")
+    if "부산" not in post["title"]:
+        errs.append("제목에 '부산'이 없습니다")
+    # choi: region is city level only, so no 구/동 names anywhere in the post.
+    raw_all = json.dumps(post, ensure_ascii=False)
+    for name in DISTRICTS:
+        if name in raw_all:
+            errs.append(f"구·동 이름 '{name}'이 들어 있습니다 (지역은 '부산'까지만)")
     if post["link"] != "https://samjung.ai.kr/?ref=" + post["keyword"]:
         errs.append("link는 https://samjung.ai.kr/?ref=<키워드> 여야 합니다")
     for must in ("5만 원", "70%"):
